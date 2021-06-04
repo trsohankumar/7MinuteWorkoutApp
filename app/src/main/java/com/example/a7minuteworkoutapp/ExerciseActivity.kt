@@ -13,6 +13,8 @@ class ExerciseActivity : AppCompatActivity() {
     private var restProgress:Int = 0
     private var exerciseTimer:CountDownTimer?=null
     private var exerciseProgress:Int = 0
+    private var exerciseList:ArrayList<ExerciseModel>?=null
+    private var currentExercisePosition = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityExerciseBinding.inflate(layoutInflater)
@@ -28,7 +30,9 @@ class ExerciseActivity : AppCompatActivity() {
             onBackPressed()
         }
         binding.llExerciseView.visibility =View.GONE
+        exerciseList = Exercise.defaultExerciseList()
         setupRestView()
+
 
     }
 //Rest view is the view when there is no exercise
@@ -37,16 +41,18 @@ class ExerciseActivity : AppCompatActivity() {
             restTimer!!.cancel()
             restProgress = 0
         }
-
         setRestProgressBar()
     }
 
     private fun setupExerciseView(){
+
+
+        binding.ivExerciseImage.setImageResource(exerciseList!![currentExercisePosition].image)
+        binding.tvExerciseName.text = exerciseList!![currentExercisePosition].name
         if(exerciseTimer != null){
             exerciseTimer!!.cancel()
             exerciseProgress = 0
         }
-
         setExerciseProgressBar()
     }
 
@@ -61,10 +67,10 @@ class ExerciseActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                Toast.makeText(this@ExerciseActivity,"Timer has been completed",Toast.LENGTH_SHORT).show()
                 binding.llRestView.visibility = View.GONE
                 binding.llExerciseView.visibility = View.VISIBLE
-                setExerciseProgressBar()
+                currentExercisePosition++
+                setupExerciseView()
 
             }
             
@@ -81,7 +87,14 @@ class ExerciseActivity : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                Toast.makeText(this@ExerciseActivity,"Timer has been completed",Toast.LENGTH_SHORT).show()
+                if(currentExercisePosition < exerciseList?.size!! -1){
+                    binding.llRestView.visibility = View.VISIBLE
+                    binding.llExerciseView.visibility = View.GONE
+                    setupRestView()
+                }else{
+                    Toast.makeText(this@ExerciseActivity,"Congratulations you have completed the 7 min workout",Toast.LENGTH_SHORT).show()
+                }
+
             }
         }.start()
     }

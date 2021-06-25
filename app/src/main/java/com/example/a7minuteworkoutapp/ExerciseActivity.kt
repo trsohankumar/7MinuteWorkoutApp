@@ -8,6 +8,7 @@ import android.speech.tts.TextToSpeech
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a7minuteworkoutapp.databinding.ActivityExerciseBinding
 import java.util.*
 import kotlin.collections.ArrayList
@@ -22,6 +23,9 @@ class ExerciseActivity : AppCompatActivity() ,TextToSpeech.OnInitListener{
     private var currentExercisePosition = -1
     private var tts:TextToSpeech?=null
     private var player:MediaPlayer?=null
+
+    private var exerciseAdapter:ExerciseStatusAdapter? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         binding = ActivityExerciseBinding.inflate(layoutInflater)
@@ -40,7 +44,7 @@ class ExerciseActivity : AppCompatActivity() ,TextToSpeech.OnInitListener{
         exerciseList = Exercise.defaultExerciseList()
         tts = TextToSpeech(this,this)
         setupRestView()
-
+        setUpExerciseStatusView()
 
     }
 //Rest view is the view when there is no exercise
@@ -151,5 +155,11 @@ class ExerciseActivity : AppCompatActivity() ,TextToSpeech.OnInitListener{
 
     private fun speakOut(text:String){
         tts!!.speak(text,TextToSpeech.QUEUE_FLUSH,null,"")
+    }
+
+    private fun setUpExerciseStatusView(){
+        binding.rvExerciseStatus.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
+        exerciseAdapter = ExerciseStatusAdapter(exerciseList!!,this)
+        binding.rvExerciseStatus.adapter = exerciseAdapter
     }
 }

@@ -91,6 +91,8 @@ class ExerciseActivity : AppCompatActivity() ,TextToSpeech.OnInitListener{
                 binding.llRestView.visibility = View.GONE
                 binding.llExerciseView.visibility = View.VISIBLE
                 currentExercisePosition++
+                exerciseList!![currentExercisePosition].isSelected  = true
+                exerciseAdapter!!.notifyDataSetChanged()
                 setupExerciseView()
 
             }
@@ -111,6 +113,9 @@ class ExerciseActivity : AppCompatActivity() ,TextToSpeech.OnInitListener{
                 if(currentExercisePosition < exerciseList?.size!! -1){
                     binding.llRestView.visibility = View.VISIBLE
                     binding.llExerciseView.visibility = View.GONE
+                    exerciseList!![currentExercisePosition].isSelected = false
+                    exerciseList!![currentExercisePosition].isCompleted = true
+                    exerciseAdapter!!.notifyDataSetChanged()
                     setupRestView()
                 }else{
                     Toast.makeText(this@ExerciseActivity,"Congratulations you have completed the 7 min workout",Toast.LENGTH_SHORT).show()

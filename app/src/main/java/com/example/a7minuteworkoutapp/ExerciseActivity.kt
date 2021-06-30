@@ -1,5 +1,6 @@
 package com.example.a7minuteworkoutapp
 
+import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.a7minuteworkoutapp.databinding.ActivityExerciseBinding
+import com.example.a7minuteworkoutapp.databinding.DialogBackConfirmationBinding
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -26,7 +28,7 @@ class ExerciseActivity : AppCompatActivity() ,TextToSpeech.OnInitListener{
     private var currentExercisePosition = -1
     private var tts:TextToSpeech?=null
     private var player:MediaPlayer?=null
-
+    private lateinit var customBinding: DialogBackConfirmationBinding
     private var exerciseAdapter:ExerciseStatusAdapter? = null
 
 
@@ -41,7 +43,7 @@ class ExerciseActivity : AppCompatActivity() ,TextToSpeech.OnInitListener{
             actionBar.setDisplayHomeAsUpEnabled(true)
         }
         binding.toolBarExerciseActivity.setNavigationOnClickListener {
-            onBackPressed()
+            customDialogForBackButton()
         }
         binding.llExerciseView.visibility =View.GONE
         exerciseList = Exercise.defaultExerciseList()
@@ -171,5 +173,21 @@ class ExerciseActivity : AppCompatActivity() ,TextToSpeech.OnInitListener{
         binding.rvExerciseStatus.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
         exerciseAdapter = ExerciseStatusAdapter(exerciseList!!,this)
         binding.rvExerciseStatus.adapter = exerciseAdapter
+    }
+
+    private fun customDialogForBackButton(){
+        val customDialog = Dialog(this)
+
+        val binding: DialogBackConfirmationBinding = DialogBackConfirmationBinding.inflate(layoutInflater)
+        customDialog.setContentView(binding.root)
+
+        binding.tvYes.setOnClickListener(View.OnClickListener {
+            finish()
+            customDialog.dismiss() // Dialog will be dismissed
+        })
+        binding.tvNo.setOnClickListener(View.OnClickListener {
+            customDialog.dismiss()
+        })
+        customDialog.show()
     }
 }

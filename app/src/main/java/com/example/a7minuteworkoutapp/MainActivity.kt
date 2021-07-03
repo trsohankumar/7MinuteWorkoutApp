@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.llHistory.setOnClickListener{
             val intent = Intent(this,HistoryActivity::class.java)
+            startActivity(intent)
         }
     }
 }
